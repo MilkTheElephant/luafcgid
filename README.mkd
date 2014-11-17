@@ -35,7 +35,7 @@ Intel Pro+ 1GB ethernet
 ## Software:
 
 + FreeBSD - last stable release
-+ nginx web server - last stable release
++ nginx or lighttpd web servers - last stable release
 + Lua - last stable release
 + libthr - drop-in replacement for libpthread
 
@@ -75,7 +75,27 @@ Add the following lines to your server{} section:
 	}
 
 **NOTE:** _make sure your root directive is set correctly_
+## Webserver (lighttpd):
+
+Add the following lines to your /etc/lighttpd/lighttpd.conf:
    
+    fastcgi.server = (".lua" =>
+                        ( "localhost" =>
+                           (
+                               "host" => "127.0.0.1",
+                               "port" => "9000"
+                            )
+                        )
+                      )
+    fastcgi.map-extensions = (".l" => ".lua")
+
+Ensure that mod_fastcgi is enabled .
+If it isnt, or you dont know add the following:
+
+
+    server.modules += ("mod_fastcgi")
+
+
 # Design
 
 luafcgid spawns and manages a number of worker threads that each contain an 
